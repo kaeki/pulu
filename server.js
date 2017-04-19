@@ -22,16 +22,16 @@ mongoose.connect(configDB.url, (err) => {
 app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static('public'));
 app.set('view engine', 'ejs');
-/*
-// Passport 
+
+// Passport
 app.use(session({secret: 'huzzaahComrades'}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
-*/
+require('./config/passport')(passport);
 // ########## ROUTER ############
 require('./app/routes.js')(app, passport);
 

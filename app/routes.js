@@ -14,17 +14,22 @@ module.exports = (app, passport) => {
         res.render('index.ejs', {message: req.flash('loginMessage')});
     });
     // app.post('/login', (req, res) => {});
-    
+
     // #### SIGNUP ####
     app.get('/signup', (req, res) => {
-        res.render('signup.pug', {message: req.flash('signupMessage')});
+        res.render('signup.ejs', {message: req.flash('signupMessage')});
     });
-    // app.post('/signup', (req, res) => {});
+    // process the signup form
+    app.post('/signup', passport.authenticate('local-signup', {
+        successRedirect: '/app',
+        failureRedirect: '/signup',
+        failureFlash: true, // allow flash messages
+    }));
 
     // ##### APP ######
     app.get('/app', isLoggedIn, (req, res) => {
-        res.render('app.pug', {
-            user: req.user
+        res.render('app.ejs', {
+            user: req.user,
         });
     });
     // #### LOGOUT ####
@@ -32,4 +37,4 @@ module.exports = (app, passport) => {
         req.logout();
         res.redirect('/');
     });
-}
+};

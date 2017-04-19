@@ -4,9 +4,9 @@ const db = {
     pwd: 'mongomiehenkostoonhirveä',
     addr: 'localhost',
     port: '27017',
-    db: 'project'
+    db: 'project',
 };
 
 module.exports = {
-    url: 'mongodb://'+db.user+':'+db.pwd+'@'+db.addr+':'+db.port+'/'+db.db
-}
+    url: 'mongodb://'+db.user+':'+db.pwd+'@'+db.addr+':'+db.port+'/'+db.db,
+};
