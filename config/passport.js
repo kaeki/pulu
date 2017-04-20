@@ -15,19 +15,18 @@ module.exports = (passport) => {
     });
 
     // ###### SIGN UP #######
-    passport.use('local-signup', new LocalStrategy(
+    passport.use('signup', new LocalStrategy(
         {
             passReqToCallback: true,
         },
         (req, username, password, done) => {
-            console.log('SIGNUP', username);
-            User.findOne({'name': username}, (err, user) => {
+            User.findOne({'username': username}, (err, user) => {
                 if (err) {
                     return done(err);
                 }
                 // if user already exists
                 if (user) {
-                    return done(null, false, req.flash('signUpMessage', 'Username already taken.'));
+                    return done(null, false, req.flash('signupMessage', 'Username already taken.'));
                 } else {
                     // create new user
                     console.log('Creating user', username);
@@ -36,6 +35,7 @@ module.exports = (passport) => {
                     newUser.username = username;
                     newUser.password = newUser.generateHash(password);
                     newUser.friends = [];
+                    newUser.rooms = [];
 
                     newUser.save((err) => {
                         if (err) {
@@ -44,6 +44,29 @@ module.exports = (passport) => {
                         return done(null, newUser);
                     });
                 }
+            });
+        }
+    ));
+    // ###### LOGIN #######
+    passport.use('login', new LocalStrategy(
+        {
+            passReqToCallback: true,
+        },
+        (req, username, password, done) => {
+            User.findOne({'username': username}, (err, user) => {
+                if (err) return done(err);
+
+                if (!user) {
+                    return done(null, false, req.flash('loginMessage',
+                    'No users found with that name'));
+                }
+                if (!user.validPassword(password)) {
+                    return done(null, false, req.flash('loginMessage',
+                    'Wrong password. You shall not pass!'));
+                }
+                console.log(username, 'LOGGED IN');
+                // All good, pass user through
+                done(null, user);
             });
         }
     ));

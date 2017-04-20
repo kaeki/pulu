@@ -1,0 +1,51 @@
+.left {
+    border-right: 2px solid lightgray;
+    min-width: 250px;
+}
+.right {
+    border-left: 2px solid lightgray;
+}
+nav {
+    min-height: 5vh;
+}
+table {
+    max-width: 100%;
+}
+.full-height {
+    height: 93vh;
+}
+.send-message-box {
+    border-top: 2px solid lightgray;
+    position: absolute;
+    right: 0;
+    left: 0;
+    bottom: 0;
+}
+.send-message-box {
+    text-align: right;
+    padding-top: 16px;
+    display: block;
+}
+.send-message-box button {
+    display: inline-block;
+    padding: 16px;
+}
+.send-message-box textarea {
+    width: 80%;
+    display: inline-block;
+}
+.messages-body {
+    height: 90%;
+    width: 100%;
+    display: block;
+    overflow: auto;
+    display: block;
+}
+.huge-button {
+    display: block;
+    padding: 35px;
+    margin:0 auto;
+}
+#messages {
+
+}

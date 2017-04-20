@@ -13,17 +13,20 @@ module.exports = (app, passport) => {
     app.get('/', (req, res) => {
         res.render('index.ejs', {message: req.flash('loginMessage')});
     });
-    // app.post('/login', (req, res) => {});
+    app.post('/login', passport.authenticate('login', {
+        successRedirect: '/app',
+        failureRedirect: '/',
+        failureFlash: true,
+    }));
 
     // #### SIGNUP ####
     app.get('/signup', (req, res) => {
         res.render('signup.ejs', {message: req.flash('signupMessage')});
     });
-    // process the signup form
-    app.post('/signup', passport.authenticate('local-signup', {
+    app.post('/signup', passport.authenticate('signup', {
         successRedirect: '/app',
         failureRedirect: '/signup',
-        failureFlash: true, // allow flash messages
+        failureFlash: true,
     }));
 
     // ##### APP ######

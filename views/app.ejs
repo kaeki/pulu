@@ -1,15 +1,77 @@
 <!DOCTYPE html>
+<meta charset="utf-8">
 <html>
     <head>
-        <title>Pulu</title>
+        <title>Pulu - chatchat</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
         <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="./css/style.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="./app.css">
     </head>
-    <div class="container">
-        <h1>Holler</h1>
-        <a href="/logout"><button class="btn btn-danger">Logout</button></a>
-    </div>
+    <body>
+        <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand col-2" href="/app">
+                <img src="img/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
+                Pulu
+            </a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                </ul>
+                <a href="/logout"><button class="btn btn-danger">Logout</button></a>
+            </div>
+        </nav>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="sidebar left col-2 full-height">
+                    <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                        <th>#</th>
+                        <th>Channels</th>
+                        </tr>
+                    </thead>
+                    <tbody id="channelTable">
+
+                    </tbody>
+                    </table>
+                </div>
+                <div class="col full-height">
+                    <div class="chat-title-bar col-12">
+                        <h1 id="chat-title"></h1>
+                        <hr>
+                    </div>
+                    <div class="row messages-body">
+                        <div id="messages" class="col-12">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 send-message-box">
+                            <div class="row">
+                            <p><strong><%= user.username %></strong></p>
+                            <form id="sendMessageForm" class="form col-10">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Bla bla bla" name="newMessage" id="newMessage" required>
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-primary" type="submit"><i class="material-icons">send</i></button>
+                                    </div>
+                                </div>
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+        <script src="./main.js"></script>
+    </body>
 </html>
