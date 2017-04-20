@@ -1,11 +1,5 @@
 // Config for database
-const db = {
-    user: 'mongomies',
-    pwd: 'mongomiehenkostoonhirveä',
-    addr: 'localhost',
-    port: '27017',
-    db: 'project',
-};
+const db = require('./config');
 
 module.exports = {
     url: 'mongodb://'+db.user+':'+db.pwd+'@'+db.addr+':'+db.port+'/'+db.db,
