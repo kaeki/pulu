@@ -4,8 +4,12 @@ Chat application with video chat made using Node.js, WebRTC
 
 ### Install
 
-> For database connection create file named config.js to config folder
+Run  
+`npm install`
+
+For database connection create file named config.js to config folder
 ```javascript
+//  config.js
 module.exports = {
     user: 'userName',
     pwd: 'password',
@@ -14,12 +18,10 @@ module.exports = {
     db: 'databaseName',
 };
 ``` 
-> Then run 
-    `npm install`
-
 
 ### Run
 
-> To start serve
+To start server
 
-    `npm start`
+`npm start`
+
