@@ -11,6 +11,8 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const server = require('http').Server(app);
+const io = require('socket.io')(server);
 
 const configDB = require('./config/database.js');
 
@@ -34,9 +36,9 @@ app.use(flash());
 require('./config/passport')(passport);
 // ########## ROUTER ############
 require('./app/routes.js')(app, passport);
-
+require('./app/socket.js')(io);
 // ########### LAUNCH ###########
-app.listen(port, (err) => {
+server.listen(port, (err) => {
     if (err) console.log(err);
     console.log('Server is listening port ', port);
 });

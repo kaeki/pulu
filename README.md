@@ -2,7 +2,11 @@
 
 Chat application with video chat made using Node.js, WebRTC
 
-### Install
+## Example
+
+[Example page](http://attesal-project.jelastic.metropolia.fi/)
+
+## Install
 
 Run  
 `npm install`
@@ -19,7 +23,7 @@ module.exports = {
 };
 ``` 
 
-### Run
+## Run
 
 To start server
 
