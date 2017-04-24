@@ -17,16 +17,22 @@ const io = require('socket.io')(server);
 const configDB = require('./config/database.js');
 
 // ######### CONFIGURATION ##########
+mongoose.Promise = global.Promise; // ES6 PROMISE
 mongoose.connect(configDB.url, (err) => {
     if (err) console.log(err);
 });
 
+// Enable https
+require('./config/https.js')(app);
+
+app.use(express.static('public'));
 app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(express.static('public'));
 app.set('view engine', 'ejs');
+
+require('./app/socket.js')(io);
 
 // Passport
 app.use(session({secret: 'huzzaahComrades'}));
@@ -34,9 +40,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 require('./config/passport')(passport);
+
 // ########## ROUTER ############
 require('./app/routes.js')(app, passport);
-require('./app/socket.js')(io);
+require('./app/api.js')(app);
+
 // ########### LAUNCH ###########
 server.listen(port, (err) => {
     if (err) console.log(err);

@@ -5,10 +5,8 @@ const isLoggedIn = (req, res, next) => {
     res.redirect('/');
 };
 
-const express = require('express');
 
 module.exports = (app, passport) => {
-    app.use(express.static('public'));
     // ##### HOME #####
     app.get('/', (req, res) => {
         res.render('index.ejs', {message: req.flash('loginMessage')});

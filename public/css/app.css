@@ -46,6 +46,7 @@ table {
     padding: 35px;
     margin:0 auto;
 }
-#messages {
-
+.bottom {
+    position: fixed;
+    bottom: 0;
 }

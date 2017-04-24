@@ -2,31 +2,47 @@
 <meta charset="utf-8">
 <html>
     <head>
-        <title>Pulu - chatchat</title>
+        <title>NodeChat</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
         <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-        <link rel="stylesheet" href="./app.css">
+        <link rel="stylesheet" href="css/app.css">
     </head>
     <body>
         <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
             <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <a class="navbar-brand col-2" href="/app">
-                <img src="img/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
-                Pulu
+            <a class="navbar-brand col-2" href="#">
+                <img src="img/logo.png" width="30" height="30" class="d-inline-block align-top" alt="logo">
+                NodeChat
             </a>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                    </li>
+                <li class="nav-item">
+                    <div class="btn-group">
+                    <button type="button" id="roomsDropDown" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Rooms
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="roomsDropDown">
+                        <a id="addRoom" class="dropdown-item" href="#">Add Room</a>
+                        <div class="dropdown-divider"></div>
+                        <a id="createRoom" class="dropdown-item" href="#">Create a New Room</a>
+                    </div>
+                    </div>
+                </li>
                 </ul>
-                <a href="/logout"><button class="btn btn-danger">Logout</button></a>
+                <button type="button" class="btn btn-primary nav-item dropdown-toggle" id="userDropDown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <%= user.username %>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropDown">
+                    <a class="dropdown-item" href="#">Profile</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="/logout">Logout</a>
+                </div>
             </div>
         </nav>
         <div class="container-fluid">
@@ -36,11 +52,10 @@
                     <thead>
                         <tr>
                         <th>#</th>
-                        <th>Channels</th>
+                        <th>Rooms</th>
                         </tr>
                     </thead>
-                    <tbody id="channelTable">
-
+                    <tbody id="roomsTable">
                     </tbody>
                     </table>
                 </div>
@@ -56,8 +71,7 @@
                     <div class="row">
                         <div class="col-12 send-message-box">
                             <div class="row">
-                            <p><strong><%= user.username %></strong></p>
-                            <form id="sendMessageForm" class="form col-10">
+                            <form id="sendMessageForm" class="form col-12">
                                 <div class="input-group">
                                     <input type="text" class="form-control" placeholder="Bla bla bla" name="newMessage" id="newMessage" required>
                                     <div class="input-group-btn">
@@ -72,6 +86,6 @@
             </div>
         </div>
         <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-        <script src="./main.js"></script>
+        <script src="js/app.js"></script>
     </body>
 </html>

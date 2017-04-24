@@ -34,6 +34,7 @@ module.exports = (passport) => {
 
                     newUser.username = username;
                     newUser.password = newUser.generateHash(password);
+                    newUser.created = Date.now();
                     newUser.friends = [];
                     newUser.rooms = [];
 
