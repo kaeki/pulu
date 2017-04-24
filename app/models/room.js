@@ -3,7 +3,9 @@ const mongoose = require('mongoose');
 // ##### SCHEMA #####
 const roomSchema = mongoose.Schema({
     name: String,
-    created: Number,
+    created: Date,
+    admin: String,
+    users: Array,
 });
 
 module.exports = mongoose.model('Room', roomSchema);

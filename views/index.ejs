@@ -9,16 +9,19 @@
         <link rel="stylesheet" href="./css/style.css">
     </head>
     <body>
+        <!-- show any messages that come back with authentication -->
+        <% if (message.length > 0) { %>
+        <div class="fixed alert alert-danger alert-dismissable">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <%= message %>
+        </div>
+        <% } %>
         <div class="jumbotron jumbotron-fluid">
             <div class="container">
                 <div class="row v-center">
                     <div class="col-md-6">
                         <h1 class="display-3">Pulu</h1>
                         <p class="lead">Chat app made with Node.js and WebRTC</p>
-                        <!-- show any messages that come back with authentication -->
-                        <% if (message.length > 0) { %>
-                            <div class="alert alert-danger"><%= message %></div>
-                        <% } %>
                         <form action="/login" method="post">
                             <div class="form-group row">
                                 <label for="username" class="col-sm-3 col-form-label col-form-label-lg">Username</label>
@@ -37,7 +40,7 @@
                             </div>
                         </form>
                         <hr>
-                        <p class="text-right">Don't have an account yet? <a href="/signup">Signup</a></p>
+                        <p class="text-right">Don't have an account yet? <a href="#" data-toggle="modal" data-target="#signupModal">Signup</a></p>
                     </div>
                     <div class="col-md-6">
                         <img class="img-jumbo" src="img/logo-big.png" alt="Pulululu">
@@ -45,6 +48,41 @@
                 </div>
             </div>
         </div>
+        <footer style="text-align: center">
+            <p>Pulu is open source (MIT), you can get the source code from <a href="https://github.com/kaeki/sssf-project">GitHub</a></p>
+        </footer>
+        <div class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Signup</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="/signup" method="POST">
+                    <div class="form-group row">
+                        <label for="name" class="col-sm-3 col-form-label col-form-label-lg">Username</label>
+                        <div class="col">
+                            <input type="text" class="form-control form-control-lg" name="username" placeholder="John Doe" required>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="password" class="col-sm-3 col-form-label col-form-label-lg">Password</label>
+                        <div class="col">
+                            <input type="password" class="form-control form-control-lg" name="password" require>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <button type="submit" class="btn btn-success right">Signup</button>
+                    </div>
+                </form>
+                </div>
+                </div>
+            </div>
+        </div>
     </body>
 </html>
         
+

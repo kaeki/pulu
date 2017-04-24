@@ -1,7 +1,7 @@
 
 
 module.exports = (app) => {
-
+    /*
     app.enable('trust proxy');
     app.use((req, res, next) => {
         if (req.secure) {
@@ -10,5 +10,5 @@ module.exports = (app) => {
             res.redirect('https://' + req.headers.host + req.url);
         }
     });
-    
+    */
 };

@@ -26,7 +26,7 @@ module.exports = (passport) => {
                 }
                 // if user already exists
                 if (user) {
-                    return done(null, false, req.flash('signupMessage', 'Username already taken.'));
+                    return done(null, false, req.flash('message', 'Username already taken.'));
                 } else {
                     // create new user
                     console.log('Creating user', username);
@@ -58,11 +58,11 @@ module.exports = (passport) => {
                 if (err) return done(err);
 
                 if (!user) {
-                    return done(null, false, req.flash('loginMessage',
+                    return done(null, false, req.flash('message',
                     'No users found with that name'));
                 }
                 if (!user.validPassword(password)) {
-                    return done(null, false, req.flash('loginMessage',
+                    return done(null, false, req.flash('message',
                     'Wrong password. You shall not pass!'));
                 }
                 console.log(username, 'LOGGED IN');

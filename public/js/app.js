@@ -1,6 +1,6 @@
 
 const fetchUser = () => {
-	const url = 'http://localhost:5000/api/user';
+	const url = app.url+'/api/user';
 	fetch(url, {
 		method: 'GET',
 		mode: 'no-cors',
@@ -12,6 +12,27 @@ const fetchUser = () => {
 	}).catch((err) => {
 		console.log(err);
 	});
+};
+
+const roomModals = {
+	init: function() {
+		document.querySelector('#addRoomBtn')
+		.addEventListener('click', (evt) => {
+			this.addRoom();
+		});
+		document.querySelector('#createRoomBtn')
+		.addEventListener('click', (evt) => {
+			this.createRoom();
+		});
+	},
+	addRoom: function() {
+		const roomId = document.querySelector('#roomIdInput').value;
+		console.log(roomId);
+	},
+	createRoom: function() {
+		const roomName = document.querySelector('#roomNameInput').value;
+		console.log(roomName);
+	},
 };
 
 const sidebarView = {
@@ -44,9 +65,11 @@ const sidebarView = {
 };
 
 const app = {
+	url: 'http://localhost:5000',
 	init: function() {
-		fetchUser();
+		roomModals.init();
 		sidebarView.init();
+		fetchUser();
 	},
 	setUser: function(user) {
 		console.log(user);

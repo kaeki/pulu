@@ -22,27 +22,34 @@ module.exports = (app) => {
 
     // ########## ROOM ###############
     // Create new room
-    app.post('/newroom/:name', isLoggedIn, (req, res) => {
+    app.post('/createroom/', isLoggedIn, (req, res) => {
         const newRoom = {
-            name: req.params.name,
+            name: req.body.roomName,
+            created: Date.now(),
             admin: req.user._id,
             users: [
                 {_id: req.user._id, username: req.user.username},
             ],
         };
         Room.create(newRoom).then((room) => {
-                res.send({status: 'OK', room: room});
+                User.find({_id: req.user._id}, (err, user) => {
+                    user.rooms.push({_id: room._id, name: room.name, admin: true});
+                    user.save((err) => {
+                        if(err) throw err;
+                        console.log('room added');
+                    });
+                });
             }).then(() => {
                 res.send({status: 'error', message: 'Error when adding room'});
             });
     });
     // Add existing room for user
-    app.post('/addRoom/:id', isLoggedIn, (req, res) => {
+    app.post('/addroom/', isLoggedIn, (req, res) => {
         User.find({_id: req.user._id}, (err, user) => {
             if (err) {
                 res.send('No users found with given id');
             }
-            Room.find({_id: req.params.id}, (err, room) => {
+            Room.find({_id: req.body.roomId}, (err, room) => {
                 if (err) {
                     res.send('No rooms found with given id');
                 }
@@ -52,7 +59,7 @@ module.exports = (app) => {
                         throw err;
                     }
                 });
-                user.rooms.push({_id: room._id, name: room.name});
+                user.rooms.push({_id: room._id, name: room.name, admin: false});
                 user.save((err) => {
                     if(err) {
                         throw err;

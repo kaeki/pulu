@@ -9,21 +9,16 @@ const isLoggedIn = (req, res, next) => {
 module.exports = (app, passport) => {
     // ##### HOME #####
     app.get('/', (req, res) => {
-        res.render('index.ejs', {message: req.flash('loginMessage')});
+        res.render('index.ejs', {message: req.flash('message')});
     });
     app.post('/login', passport.authenticate('login', {
         successRedirect: '/app',
         failureRedirect: '/',
         failureFlash: true,
     }));
-
-    // #### SIGNUP ####
-    app.get('/signup', (req, res) => {
-        res.render('signup.ejs', {message: req.flash('signupMessage')});
-    });
     app.post('/signup', passport.authenticate('signup', {
         successRedirect: '/app',
-        failureRedirect: '/signup',
+        failureRedirect: '/',
         failureFlash: true,
     }));
 

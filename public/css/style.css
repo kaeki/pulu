@@ -4,3 +4,7 @@
 .v-center {
     margin: auto 0;
 }
+.fixed {
+    position: fixed;
+    width: 100%;
+}
