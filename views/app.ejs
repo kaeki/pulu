@@ -61,7 +61,10 @@
                 </div>
                 <div class="col full-height">
                     <div class="chat-title-bar col-12">
-                        <h1 id="chat-title"></h1>
+                        <div class="row">
+                            <h1 id="roomTitle"></h1>
+                            <span id="roomId" class="id-text text-muted"></span>
+                        </div>
                         <hr>
                     </div>
                     <div class="row messages-body">
@@ -120,8 +123,8 @@
                 <div class="modal-body">
                     <form id="createRoomForm">
                     <div class="form-group">
-                        <label for="roomName" class="form-control-label">Room name:</label>
-                        <input type="text" class="form-control" id="roomNameInput" required>
+                        <label for="name" class="form-control-label">Room name:</label>
+                        <input type="text" name="name" class="form-control" id="roomNameInput" required>
                     </div>
                     </form>
                 </div>

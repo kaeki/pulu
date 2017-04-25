@@ -22,16 +22,56 @@ const roomModals = {
 		});
 		document.querySelector('#createRoomBtn')
 		.addEventListener('click', (evt) => {
+			evt.preventDefault();
 			this.createRoom();
 		});
 	},
 	addRoom: function() {
 		const roomId = document.querySelector('#roomIdInput').value;
-		console.log(roomId);
+		if(roomId.length == 0) {
+			alert('Please give an id for room');
+		} else {
+			const url = app.url+'/api/addroom/'+roomId;
+			console.log(url);
+			fetch(url, {
+				method: 'POST',
+				body: {},
+				mode: 'no-cors',
+				credentials: 'include',
+			}).then((response) => {
+				return response.json();
+			}).then((json) => {
+				if (json.status == 'error') {
+					alert(json.message);
+				} else {
+					app.init();
+				}
+			}).catch((err) => {
+				console.log(err);
+			});
+		}
 	},
 	createRoom: function() {
 		const roomName = document.querySelector('#roomNameInput').value;
-		console.log(roomName);
+		if(roomName.length == 0) {
+			alert('Please give a name for your new and mighty room.');
+		} else {
+			const url = app.url+'/api/createroom/'+roomName;
+			console.log(url);
+			fetch(url, {
+				method: 'POST',
+				body: {},
+				mode: 'no-cors',
+				credentials: 'include',
+			}).then((response) => {
+				return response.json();
+			}).then((json) => {
+				console.log(json);
+				app.init();
+			}).catch((err) => {
+				console.log(err);
+			});
+		}
 	},
 };
 
@@ -42,6 +82,7 @@ const sidebarView = {
 	render: function(rooms) {
 		const table = this.roomsTable;
 		table.innerHTML = '';
+		console.log(rooms);
 		if (rooms.length == 0) {
 			table.innerHTML = `<tr>
 				<th scope="row">0</th>
@@ -49,24 +90,34 @@ const sidebarView = {
 				</tr>`;
 		} else {
 			let i = 0;
-			rooms.foreach((room) => {
+			rooms.forEach((room) => {
 				i++;
 				const row = document.createElement('tr');
 				const temp = `<th scope="row"">${i}</th>
 					<td>#${room.name}</td>`;
 				row.innerHTML = temp;
 				row.addEventListener('click', (evt) => {
-					return chat.connect(room._id);
+					return chat.connect(room);
 				});
 				table.appendChild(row);
 			});
 		}
 	},
 };
-
+const chat = {
+	init: function() {
+		this.title = document.querySelector('#roomTitle');
+		this.id = document.querySelector('#roomId');
+	},
+	connect: function(room) {
+		this.title.innerHTML = '#'+room.name;
+		this.id.innerHTML = '- '+room._id;
+	},
+};
 const app = {
 	url: 'http://localhost:5000',
 	init: function() {
+		chat.init();
 		roomModals.init();
 		sidebarView.init();
 		fetchUser();

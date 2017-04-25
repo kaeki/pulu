@@ -22,9 +22,9 @@ module.exports = (app) => {
 
     // ########## ROOM ###############
     // Create new room
-    app.post('/createroom/', isLoggedIn, (req, res) => {
+    app.post('/api/createroom/:name', isLoggedIn, (req, res) => {
         const newRoom = {
-            name: req.body.roomName,
+            name: req.params.name,
             created: Date.now(),
             admin: req.user._id,
             users: [
@@ -32,26 +32,31 @@ module.exports = (app) => {
             ],
         };
         Room.create(newRoom).then((room) => {
-                User.find({_id: req.user._id}, (err, user) => {
-                    user.rooms.push({_id: room._id, name: room.name, admin: true});
-                    user.save((err) => {
-                        if(err) throw err;
-                        console.log('room added');
-                    });
+            User.findOne({_id: req.user._id}, (err, user) => {
+                console.log(user);
+                console.log(room);
+                user.rooms.push({_id: room._id, name: room.name, admin: true});
+                user.save((err) => {
+                    if (err) {
+                        console.log(err);
+                        res.send({status: 'error', message: 'Error adding room'});
+                    }
+                    res.send({status: 'OK', room: room});
                 });
-            }).then(() => {
-                res.send({status: 'error', message: 'Error when adding room'});
             });
+        }).catch((err) => {
+            res.send({status: 'error', message: 'Error creating room'});
+        });
     });
     // Add existing room for user
-    app.post('/addroom/', isLoggedIn, (req, res) => {
-        User.find({_id: req.user._id}, (err, user) => {
+    app.post('/api/addroom/:id', isLoggedIn, (req, res) => {
+        User.findOne({_id: req.user._id}, (err, user) => {
             if (err) {
-                res.send('No users found with given id');
+                res.send({status: 'error', message: 'User not found'});
             }
-            Room.find({_id: req.body.roomId}, (err, room) => {
+            Room.findOne({_id: req.params.id}, (err, room) => {
                 if (err) {
-                    res.send('No rooms found with given id');
+                    res.send({status: 'error', message: 'No rooms found with given id.'});
                 }
                 room.users.push({_id: user._id, username: user.username});
                 room.save((err) => {
