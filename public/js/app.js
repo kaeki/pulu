@@ -77,43 +77,65 @@ const roomModals = {
 
 const sidebarView = {
 	init: function() {
-		this.roomsTable = document.querySelector('#roomsTable');
+		this.roomsList = document.querySelector('#roomsList');
+		this.tabs = document.querySelector('#messageTabs');
 	},
 	render: function(rooms) {
-		const table = this.roomsTable;
-		table.innerHTML = '';
+		const self = this;
+		self.roomsList.innerHTML = '';
 		console.log(rooms);
 		if (rooms.length == 0) {
-			table.innerHTML = `<tr>
-				<th scope="row">0</th>
-				<td>No rooms yet ;__;</td>
-				</tr>`;
+			self.roomsList.innerHTML = `
+				<li>Add/Create rooms and start chatting</li>`;
 		} else {
-			let i = 0;
-			rooms.forEach((room) => {
-				i++;
-				const row = document.createElement('tr');
-				const temp = `<th scope="row"">${i}</th>
-					<td>#${room.name}</td>`;
-				row.innerHTML = temp;
-				row.addEventListener('click', (evt) => {
-					return chat.connect(room);
-				});
-				table.appendChild(row);
-			});
+			for(let i = 0; i < rooms.length; i++) {
+				const li = self.createListEntry(rooms[i], (i == 0));
+				self.roomsList.appendChild(li);
+				const tab = self.createChatTab(rooms[i], (i==0));
+				self.tabs.innerHTML += tab;
+				chat.connect(rooms[i]);
+			}
+		}
+	},
+	createListEntry: function(room, first) {
+		const li = document.createElement('li');
+		li.setAttribute('class', 'nav-item');
+		const temp = `<a class="nav-link" 
+			data-toggle="tab" 
+			href="#${room.name}" 
+			role="tab">${room.name}</a>
+		</li>`;
+		li.innerHTML = temp;
+		if(first) {
+			li.querySelector('a').setAttribute('class', 'nav-link active');
+		}
+		li.addEventListener('click', (evt) => {
+			return chat.connect(room);
+		});
+		return li;
+	},
+	createChatTab: function(room, first) {
+		if(first) {
+			return `<div class="tab-pane active" 
+			id="${room.name}" role="tabpanel"></div>`;
+		} else {
+			return `<div class="tab-pane" 
+			id="${room.name}" role="tabpanel"></div>`;
 		}
 	},
 };
 const chat = {
 	init: function() {
 		this.messages = document.querySelector('#messages');
+		this.msgContainer = document.querySelector('#msgContainer');
 		this.socket = io.connect('http://localhost:5000');
 		this.socket.on('message', (msg) => {
 			const timeStamp = new Date(msg.time).toLocaleTimeString('FI');
 			const newMessage = `<div class="card><div class="card-block>
 				<p>${timeStamp} - <strong>${msg.user}:</strong> ${msg.text}</p>
 				</div></div>`;
-			messages.innerHTML += newMessage;
+			document.querySelector('#'+msg.room).innerHTML += newMessage;
+			this.msgContainer.scrollTop = this.msgContainer.scrollHeight;
 		});
 		this.socket.on('connect', () => {
 			console.log('socket.io connected');
@@ -131,15 +153,18 @@ const chat = {
 		this.id = document.querySelector('#roomId');
 	},
 	connect: function(room) {
-		this.title.innerHTML = '#'+room.name;
-		this.id.innerHTML = '- '+room._id;
-		this.messages.innerHTML = '';
+		this.title.innerHTML = room.name;
+		this.id.innerHTML = room._id;
 		this.socket.emit('room', room._id);
-	},
+	},	
 	sendMessage: function sendMsg() {
 		console.log('send message');
 		const newMessage = document.querySelector('#newMessage').value;
+		const roomName = document.querySelector('#roomTitle').innerText;
+		const roomId = document.querySelector('#roomId').innerText;
 		const msg = {
+			roomId: roomId,
+			room: roomName,
 			time: Date.now(),
 			user: app.getUser().name,
 			text: newMessage,

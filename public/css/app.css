@@ -39,7 +39,9 @@ table {
     width: 100%;
     display: block;
     overflow: auto;
-    display: block;
+}
+#messages {
+    
 }
 .huge-button {
     display: block;

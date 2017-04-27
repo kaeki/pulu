@@ -48,16 +48,9 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="sidebar left col-2 full-height">
-                    <table class="table table-striped table-hover">
-                    <thead>
-                        <tr>
-                        <th>#</th>
-                        <th>Rooms</th>
-                        </tr>
-                    </thead>
-                    <tbody id="roomsTable">
-                    </tbody>
-                    </table>
+                    <h3>Rooms:</h3>
+                    <ul id="roomsList" class="nav nav-fill flex-column nav-pills">
+                    </ul>
                 </div>
                 <div class="col full-height">
                     <div class="chat-title-bar col-12">
@@ -67,8 +60,8 @@
                         </div>
                         <hr>
                     </div>
-                    <div class="row messages-body">
-                        <div id="messages" class="col-12">
+                    <div id="msgContainer" class="row messages-body">
+                        <div id="messageTabs" class="tab-content col-12">
                         </div>
                     </div>
                     <div class="row">
