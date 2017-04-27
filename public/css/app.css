@@ -35,7 +35,7 @@ table {
     display: inline-block;
 }
 .messages-body {
-    height: 90%;
+    max-height: 80%;
     width: 100%;
     display: block;
     overflow: auto;

@@ -106,14 +106,49 @@ const sidebarView = {
 };
 const chat = {
 	init: function() {
+		this.messages = document.querySelector('#messages');
+		this.socket = io.connect('http://localhost:5000');
+		this.socket.on('message', (msg) => {
+			const timeStamp = new Date(msg.time).toLocaleTimeString('FI');
+			const newMessage = `<div class="card><div class="card-block>
+				<p>${timeStamp} - <strong>${msg.user}:</strong> ${msg.text}</p>
+				</div></div>`;
+			messages.innerHTML += newMessage;
+		});
+		this.socket.on('connect', () => {
+			console.log('socket.io connected');
+		});
+		this.socket.on('disconnect', () => {
+			console.log('socket.io disconnected');
+		});
+		document.querySelector('#sendMessageForm')
+			.addEventListener('submit', (evt) => {
+				evt.preventDefault();
+				chat.sendMessage();
+				evt.target.reset();
+		});
 		this.title = document.querySelector('#roomTitle');
 		this.id = document.querySelector('#roomId');
 	},
 	connect: function(room) {
 		this.title.innerHTML = '#'+room.name;
 		this.id.innerHTML = '- '+room._id;
+		this.messages.innerHTML = '';
+		this.socket.emit('room', room._id);
+	},
+	sendMessage: function sendMsg() {
+		console.log('send message');
+		const newMessage = document.querySelector('#newMessage').value;
+		const msg = {
+			time: Date.now(),
+			user: app.getUser().name,
+			text: newMessage,
+			json: 'json',
+		};
+		this.socket.emit('message', msg);
 	},
 };
+
 const app = {
 	url: 'http://localhost:5000',
 	init: function() {
@@ -133,3 +168,8 @@ const app = {
 };
 
 app.init();
+
+
+
+
+
