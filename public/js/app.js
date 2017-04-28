@@ -96,6 +96,7 @@ const sidebarView = {
 				const tab = self.createChatTab(rooms[i], (i==0));
 				self.tabs.innerHTML += tab;
 				chat.connect(rooms[i]);
+				usersSideBar.test(rooms[i]._id);
 			}
 		}
 	},
@@ -132,6 +133,38 @@ const sidebarView = {
 	},
 };
 
+const usersSideBar = {
+	test: function(id) {
+		const url = '/api/roomusers/'+id;
+		fetch(url, {
+			method: 'GET',
+			mode: 'no-cors',
+			credentials: 'include',
+		}).then((response) => {
+			return response.json();
+		}).then((json) => {
+			usersSideBar.render(json.users);
+		}).catch((err) => {
+			console.log(err);
+		});
+	},
+	render: function(users) {
+		const list = document.querySelector('#usersList');
+		console.log(users);
+		users.forEach((user) => {
+			const item = usersSideBar.createListEntry(user);
+			list.appendChild(item);
+		});
+	},
+	createListEntry: function(user) {
+		const li = document.createElement('li');
+		li.innerHTML = user.username;
+		if(!user.online) {
+			li.setAttribute('class', 'text-muted');
+		}
+		return li;
+	},
+};
 const chat = {
 	init: function() {
 		this.messages = document.querySelector('#messages');

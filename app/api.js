@@ -1,5 +1,6 @@
 const User = require('./models/user');
 const Room = require('./models/room');
+const ObjectId = require('mongodb').ObjectID;
 
 const isLoggedIn = (req, res, next) => {
     if (req.isAuthenticated()) {
@@ -16,6 +17,7 @@ module.exports = (app) => {
             name: req.user.username,
             rooms: req.user.rooms,
             friends: req.user.friends,
+            online: req.user.online,
         };
         res.send(JSON.stringify(user));
     });
@@ -72,6 +74,15 @@ module.exports = (app) => {
                 });
                 res.send({status: 'OK', message: 'Room added'});
             });
+        });
+    });
+    // ########## GET ALL USERS ONLINE IN ROOM ##########
+    app.get('/api/roomusers/:id', isLoggedIn, (req, res) => {
+        User.find({rooms: {$elemMatch: {_id: ObjectId(req.params.id)}}}, 
+        {username: 1, online: 1},
+        (err, users) => {
+            if(err) res.send({status: 'error', message: 'No users found'});
+            res.send({status: 'OK', users: users});
         });
     });
 };

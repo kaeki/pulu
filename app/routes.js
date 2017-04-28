@@ -1,10 +1,11 @@
+const User = require('./models/user');
+
 const isLoggedIn = (req, res, next) => {
     if (req.isAuthenticated()) {
         return next();
     }
     res.redirect('/');
 };
-
 
 module.exports = (app, passport) => {
     // ##### HOME #####
@@ -24,12 +25,24 @@ module.exports = (app, passport) => {
 
     // ##### APP ######
     app.get('/app', isLoggedIn, (req, res) => {
+        User.findOne({_id: req.user._id}, (err, user) => {
+            user.online = true;
+            user.save((err) => {
+                console.log(err);
+            });
+        });
         res.render('app.ejs', {
             user: req.user,
         });
     });
     // #### LOGOUT ####
     app.get('/logout', (req, res) => {
+        User.findOne({_id: req.user._id}, (err, user) => {
+            user.online = false;
+            user.save((err) => {
+                console.log(err);
+            });
+        });
         req.logout();
         res.redirect('/');
     });
