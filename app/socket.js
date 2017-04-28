@@ -7,12 +7,11 @@ module.exports = (io) => {
         });
 
         socket.on('message', (msg) => {
-            console.log('message from client: '+JSON.stringify(msg));
             io.to(msg.roomId).emit('message', msg);
         });
         socket.on('room', (room) => {
             socket.join(room, () => {
-                console.log('Joined to room '+room);
+                console.log('User joined to room '+room);
             });
         });
     });

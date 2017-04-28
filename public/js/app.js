@@ -1,6 +1,6 @@
 
 const fetchUser = () => {
-	const url = app.url+'/api/user';
+	const url = '/api/user';
 	fetch(url, {
 		method: 'GET',
 		mode: 'no-cors',
@@ -31,7 +31,7 @@ const roomModals = {
 		if(roomId.length == 0) {
 			alert('Please give an id for room');
 		} else {
-			const url = app.url+'/api/addroom/'+roomId;
+			const url = '/api/addroom/'+roomId;
 			console.log(url);
 			fetch(url, {
 				method: 'POST',
@@ -56,7 +56,7 @@ const roomModals = {
 		if(roomName.length == 0) {
 			alert('Please give a name for your new and mighty room.');
 		} else {
-			const url = app.url+'/api/createroom/'+roomName;
+			const url = '/api/createroom/'+roomName;
 			console.log(url);
 			fetch(url, {
 				method: 'POST',
@@ -79,6 +79,8 @@ const sidebarView = {
 	init: function() {
 		this.roomsList = document.querySelector('#roomsList');
 		this.tabs = document.querySelector('#messageTabs');
+		this.title = document.querySelector('#roomTitle');
+		this.id = document.querySelector('#roomId');
 	},
 	render: function(rooms) {
 		const self = this;
@@ -98,6 +100,7 @@ const sidebarView = {
 		}
 	},
 	createListEntry: function(room, first) {
+		const self = this;
 		const li = document.createElement('li');
 		li.setAttribute('class', 'nav-item');
 		const temp = `<a class="nav-link" 
@@ -110,12 +113,16 @@ const sidebarView = {
 			li.querySelector('a').setAttribute('class', 'nav-link active');
 		}
 		li.addEventListener('click', (evt) => {
-			return chat.connect(room);
+			self.title.innerHTML = room.name;
+			self.id.innerHTML = room._id;
 		});
 		return li;
 	},
 	createChatTab: function(room, first) {
+		const self = this;
 		if(first) {
+			self.title.innerHTML = room.name;
+			self.id.innerHTML = room._id;
 			return `<div class="tab-pane active" 
 			id="${room.name}" role="tabpanel"></div>`;
 		} else {
@@ -124,11 +131,12 @@ const sidebarView = {
 		}
 	},
 };
+
 const chat = {
 	init: function() {
 		this.messages = document.querySelector('#messages');
 		this.msgContainer = document.querySelector('#msgContainer');
-		this.socket = io.connect('http://localhost:5000');
+		this.socket = io.connect('/');
 		this.socket.on('message', (msg) => {
 			const timeStamp = new Date(msg.time).toLocaleTimeString('FI');
 			const newMessage = `<div class="card><div class="card-block>
@@ -149,14 +157,10 @@ const chat = {
 				chat.sendMessage();
 				evt.target.reset();
 		});
-		this.title = document.querySelector('#roomTitle');
-		this.id = document.querySelector('#roomId');
 	},
 	connect: function(room) {
-		this.title.innerHTML = room.name;
-		this.id.innerHTML = room._id;
 		this.socket.emit('room', room._id);
-	},	
+	},
 	sendMessage: function sendMsg() {
 		console.log('send message');
 		const newMessage = document.querySelector('#newMessage').value;
@@ -175,7 +179,6 @@ const chat = {
 };
 
 const app = {
-	url: 'http://localhost:5000',
 	init: function() {
 		chat.init();
 		roomModals.init();
