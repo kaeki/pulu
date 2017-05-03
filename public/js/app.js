@@ -196,8 +196,7 @@ const chat = {
 			fetch('/logout', {
 				method: 'GET',
 				mode: 'no-cors',
-				credentials: 'include',
-			}).then();
+			});
 		});
 		document.querySelector('#sendMessageForm')
 			.addEventListener('submit', (evt) => {
@@ -231,11 +230,21 @@ const videoChat = {
 	init: function() {
 		this.local = document.querySelector('#local');
 		this.container = document.querySelector('#videoContainer');
-		this.startBtn = document.querySelector('#startVideoBtn');
-		this.startBtn.addEventListener('click', (evt) => {
-			$('#startVideoBtn').hide();
-			$('#videoChat').show();
-			videoChat.start();
+		this.title = document.querySelector('#videoChatTitle');
+		document.querySelector('#startVideoBtn').addEventListener(
+			'click', (evt) => {
+				videoChat.start();
+		});
+		document.querySelector('#hangupBtn').addEventListener(
+			'click', () => {
+				videoChat.stop();
+			}
+		);
+		this.rtc = new SimpleWebRTC({
+			url: '/',
+			localVideoEl: 'local',
+			remoteVideosEl: '',
+			autoRequestMedia: true,
 		});
 		videoChat.grid();
 	},
@@ -249,29 +258,36 @@ const videoChat = {
 		$('#videoContainer').disableSelection();
 		$('.resizable-video')
 			.resizable({
-				grid: [80, 60],
+				grid: [40, 30],
 				aspectRatio: 4 / 3,
 				maxWidth: 640,
 				maxHeight: 480,
 			});
 	},
 	start: function() {
-		const room = document.querySelector('#roomId').value;
-		const rtc = new SimpleWebRTC({
-			url: '/',
-			localVideoEl: 'local',
-			remoteVideosEl: '',
-			autoRequestMedia: true,
-		});
-		videoChat.connect(rtc, room);
-	},
-	connect: function(webrtc, room) {
 		console.log('start');
-		webrtc.joinRoom(room);
-		webrtc.on('videoAdded', (video, peer) => {
+		$('#startVideoBtn').hide();
+		$('#hangupBtn').show();
+		$('#videoChat').show();
+		const room = document.querySelector('#roomId').value;
+		this.title.innerHTML = document.querySelector('#roomTitle').innerHTML;
+		videoChat.connect(this.rtc, room);
+	},
+	stop: function() {
+		console.log('stop');
+		$('#startVideoBtn').show();
+		$('#hangupBtn').hide();
+		$('#videoChat').hide();
+		this.rtc.stopLocalVideo();
+		this.rtc.leaveRoom();
+	},
+	connect: function(room) {
+		console.log('connect');
+		this.rtc.joinRoom(room);
+		this.rtc.on('videoAdded', (video, peer) => {
 			videoChat.add(video, peer);
 		});
-		webrtc.on('videoRemoved', function(video, peer) {
+		this.rtc.on('videoRemoved', function(video, peer) {
 			videoChat.remove(video, peer);
 		});
 	},
@@ -289,7 +305,9 @@ const videoChat = {
 	},
 	remove: function(video, peer) {
 		console.log('video removed ', peer);
-		const videoEl = document.getElementById(peer ? 'container_'+webrtc.getDomId(peer) : 'local');
+		const videoEl = document.getElementById(
+			peer ? 'container_'+webrtc.getDomId(peer) : 'local'
+		);
 		if (this.container && videoEl) {
 			this.container.removeChild(videoEl);
 		}
@@ -300,8 +318,8 @@ const videoChat = {
 const app = {
 	currentRoom: '',
 	init: function() {
-		this.currentRoom = null;
 		$('#videoChat').hide();
+		$('#hangupBtn').hide();
 		chat.init();
 		videoChat.init();
 		roomModals.init();
@@ -323,8 +341,3 @@ const app = {
 };
 
 app.init();
-
-
-
-
-

@@ -16,7 +16,7 @@
         <link rel="stylesheet" href="css/app.css">
     </head>
     <body>
-        <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
+        <nav class="navbar navbar-toggleable-md navbar-inverse darker">
             <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -33,21 +33,29 @@
                     <span id="roomId" class="nav-room-id id-text text-muted"></span>
                 </li>
                 </ul>
-                <button class="btn btn-success nav-item" id="startVideoBtn">Join to Video Chat</button>
+                <!--
+                <div id="voiceControls" class="nav-item bottom btn-group">
+                    <button type="button" class="btn btn-default"><i class="material-icons">volume_off</i></button>
+                    <button type="button" class="btn btn-default"><i class="material-icons">mic</i></button>
+                    <button type="button" class="btn btn-default"><i class="material-icons">mic</i></button>
+                </div>
+                -->
+                <button class="btn btn-danger nav-item" id="hangupBtn"><i class="material-icons">videocam_off</i></button>
+                <button class="btn btn-success nav-item" id="startVideoBtn"><i class="material-icons">video_call</i></button>
                 <button type="button" class="btn btn-primary nav-item dropdown-toggle" id="userDropDown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <%= user.username %>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropDown">
                     <a class="dropdown-item" href="#" data-toggle="modal" data-target="#profileModal">Profile</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="/logout">Logout</a>
+                    <a class="dropdown-item"  href="/logout">Logout</a>
                 </div>
             </div>
         </nav>
         <div class="container-fluid">
             <div class="row">
                 <div class="sidebar left col-1 full-height">
-                    <h1>Rooms:</h1>
+                    <h1 class="text-light">Rooms:</h1>
                     <ul id="roomsList" class="nav nav-fill flex-column nav-pills">
                     </ul>
                     <div class="btn-group">
@@ -61,11 +69,13 @@
                         </div>
                     </div>
                     <hr>
-                    <h1>Users:</h1>
+                    <h1 class="text-light">Users:</h1>
                     <ul id="usersList">
                     </ul>
+
                 </div>
-                <div id="videoChat" class="col-8 full-height">
+                <div id="videoChat" class="col-8 dgbg full-height">
+                        <h1 id="videoChatTitle" class="text-light"></h1>
                         <div id="videoContainer" class="row-fluid">
                             <div class="resizable-video">
                                 <video id="local"></video>
@@ -74,7 +84,7 @@
                 </div>
                 <div class="sidebar right col full-height">
                     <div id="msgContainer" class="row messages-body">
-                        <div id="messageTabs" class="tab-content col-12">
+                        <div id="messageTabs" class="tab-content text-light col-12">
                         </div>
                     </div>
                     <div class="row">
@@ -82,7 +92,7 @@
                             <div class="row">
                             <form id="sendMessageForm" class="form col-12">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Bla bla bla" name="newMessage" id="newMessage" required>
+                                    <input type="text" class="form-control lighter" placeholder="Bla bla bla" name="newMessage" id="newMessage" required>
                                     <div class="input-group-btn">
                                         <button class="btn btn-primary" type="submit"><i class="material-icons">send</i></button>
                                     </div>

@@ -78,7 +78,7 @@ module.exports = (app) => {
     // ########## GET ALL USERS ONLINE IN ROOM ##########
     app.get('/api/room/:id/users', isLoggedIn, (req, res) => {
         User.find({rooms: {$elemMatch: {_id: ObjectId(req.params.id)}}},
-        {username: 1, online: 1},
+        {username: 1},
         (err, users) => {
             if(err) res.send({status: 'error', message: 'No users found'});
             res.send({status: 'OK', users: users});

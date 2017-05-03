@@ -84,4 +84,17 @@ video {
 }
 .sidebar {
     min-width: 200px;
+    background: #292b2c;
+}
+.dgbg {
+    background: #292b2c;
+}
+.darker {
+    background: #151616;
+}
+.lighter {
+    background: lightgrey;
+}
+.text-light {
+    color: darkgrey;
 }
