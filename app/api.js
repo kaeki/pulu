@@ -60,7 +60,6 @@ module.exports = (app) => {
                 if (err) {
                     res.send({status: 'error', message: 'No rooms found with given id.'});
                 }
-                room.users.push({_id: user._id, username: user.username});
                 room.save((err) => {
                     if (err) {
                         throw err;
@@ -78,7 +77,7 @@ module.exports = (app) => {
     });
     // ########## GET ALL USERS ONLINE IN ROOM ##########
     app.get('/api/room/:id/users', isLoggedIn, (req, res) => {
-        User.find({rooms: {$elemMatch: {_id: ObjectId(req.params.id)}}}, 
+        User.find({rooms: {$elemMatch: {_id: ObjectId(req.params.id)}}},
         {username: 1, online: 1},
         (err, users) => {
             if(err) res.send({status: 'error', message: 'No users found'});

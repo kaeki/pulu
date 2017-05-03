@@ -303,7 +303,7 @@ const app = {
 	},
 	addRoom: function(room) {
 		this.user.rooms.push(room);
-		sidebarView.render(user.rooms);
+		sidebarView.render(this.user.rooms);
 	},
 	getUser: function() {
 		return this.user;
