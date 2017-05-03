@@ -41,13 +41,13 @@ module.exports = (app) => {
                 user.save((err) => {
                     if (err) {
                         console.log(err);
-                        res.send({status: 'error', message: 'Error adding room'});
+                        res.send({error: 'error', message: 'Error adding room'});
                     }
-                    res.send({status: 'OK', room: room});
+                    res.send(room);
                 });
             });
         }).catch((err) => {
-            res.send({status: 'error', message: 'Error creating room'});
+            res.send({error: 'error', message: 'Error creating room'});
         });
     });
     // Add existing room for user
@@ -72,12 +72,12 @@ module.exports = (app) => {
                         throw err;
                     }
                 });
-                res.send({status: 'OK', message: 'Room added'});
+                res.send(room);
             });
         });
     });
     // ########## GET ALL USERS ONLINE IN ROOM ##########
-    app.get('/api/roomusers/:id', isLoggedIn, (req, res) => {
+    app.get('/api/room/:id/users', isLoggedIn, (req, res) => {
         User.find({rooms: {$elemMatch: {_id: ObjectId(req.params.id)}}}, 
         {username: 1, online: 1},
         (err, users) => {

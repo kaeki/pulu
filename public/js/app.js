@@ -1,4 +1,4 @@
-
+// GET USER DATA
 const fetchUser = () => {
 	const url = '/api/user';
 	fetch(url, {
@@ -14,6 +14,7 @@ const fetchUser = () => {
 	});
 };
 
+// ROOM CREATING AND ADDING
 const roomModals = {
 	init: function() {
 		document.querySelector('#addRoomBtn')
@@ -44,7 +45,7 @@ const roomModals = {
 				if (json.status == 'error') {
 					alert(json.message);
 				} else {
-					app.init();
+					app.addRoom(json);
 				}
 			}).catch((err) => {
 				console.log(err);
@@ -57,7 +58,6 @@ const roomModals = {
 			alert('Please give a name for your new and mighty room.');
 		} else {
 			const url = '/api/createroom/'+roomName;
-			console.log(url);
 			fetch(url, {
 				method: 'POST',
 				body: {},
@@ -67,7 +67,7 @@ const roomModals = {
 				return response.json();
 			}).then((json) => {
 				console.log(json);
-				app.init();
+				app.addRoom(json);
 			}).catch((err) => {
 				console.log(err);
 			});
@@ -75,6 +75,7 @@ const roomModals = {
 	},
 };
 
+// SIDEBAR VIEWS FOR ROOMS AND USERS
 const sidebarView = {
 	init: function() {
 		this.roomsList = document.querySelector('#roomsList');
@@ -91,13 +92,17 @@ const sidebarView = {
 				<li>Add/Create rooms and start chatting</li>`;
 		} else {
 			for(let i = 0; i < rooms.length; i++) {
+				if (i == 0) {
+					console.log(rooms[i]._id);
+					app.currentRoom= rooms[i]._id;
+				}
 				const li = self.createListEntry(rooms[i], (i == 0));
 				self.roomsList.appendChild(li);
 				const tab = self.createChatTab(rooms[i], (i==0));
 				self.tabs.innerHTML += tab;
 				chat.connect(rooms[i]);
-				usersSideBar.test(rooms[i]._id);
 			}
+			usersSideBar.init();
 		}
 	},
 	createListEntry: function(room, first) {
@@ -116,6 +121,8 @@ const sidebarView = {
 		li.addEventListener('click', (evt) => {
 			self.title.innerHTML = room.name;
 			self.id.innerHTML = room._id;
+			app.currentRoom = room._id;
+			usersSideBar.init();
 		});
 		return li;
 	},
@@ -134,8 +141,11 @@ const sidebarView = {
 };
 
 const usersSideBar = {
-	test: function(id) {
-		const url = '/api/roomusers/'+id;
+	init: function() {
+		this.list = document.querySelector('#usersList');
+		this.list.innerHTML = '';
+		const id = app.currentRoom;
+		const url = '/api/room/'+id+'/users';
 		fetch(url, {
 			method: 'GET',
 			mode: 'no-cors',
@@ -149,31 +159,32 @@ const usersSideBar = {
 		});
 	},
 	render: function(users) {
-		const list = document.querySelector('#usersList');
-		console.log(users);
 		users.forEach((user) => {
 			const item = usersSideBar.createListEntry(user);
-			list.appendChild(item);
+			usersSideBar.list.appendChild(item);
 		});
 	},
 	createListEntry: function(user) {
 		const li = document.createElement('li');
 		li.innerHTML = user.username;
-		if(!user.online) {
-			li.setAttribute('class', 'text-muted');
+		if(user.online) {
+			li.setAttribute('class', 'user-online');
+		} else {
+			li.setAttribute('class', 'user-offline');
 		}
 		return li;
 	},
 };
+
+// CHAT RELATED ThINGS
 const chat = {
 	init: function() {
 		this.messages = document.querySelector('#messages');
 		this.msgContainer = document.querySelector('#msgContainer');
 		this.socket = io.connect('/');
 		this.socket.on('message', (msg) => {
-			const timeStamp = new Date(msg.time).toLocaleTimeString('FI');
 			const newMessage = `<div class="card><div class="card-block>
-				<p>${timeStamp} - <strong>${msg.user}:</strong> ${msg.text}</p>
+				<p><strong>${msg.user}:</strong> ${msg.text}</p>
 				</div></div>`;
 			document.querySelector('#'+msg.room).innerHTML += newMessage;
 			this.msgContainer.scrollTop = this.msgContainer.scrollHeight;
@@ -182,7 +193,11 @@ const chat = {
 			console.log('socket.io connected');
 		});
 		this.socket.on('disconnect', () => {
-			console.log('socket.io disconnected');
+			fetch('/logout', {
+				method: 'GET',
+				mode: 'no-cors',
+				credentials: 'include',
+			}).then();
 		});
 		document.querySelector('#sendMessageForm')
 			.addEventListener('submit', (evt) => {
@@ -211,9 +226,72 @@ const chat = {
 	},
 };
 
-const app = {
+// VIDEO CHAT
+const videoChat = {
 	init: function() {
+		this.local = document.querySelector('#local');
+		this.container = document.querySelector('#videoContainer');
+		this.startBtn = document.querySelector('#startVideoBtn');
+		this.startBtn.addEventListener('click', (evt) => {
+			$('#startVideoBtn').hide();
+			$('#videoChat').show();
+			videoChat.start();
+		});
+		videoChat.grid();
+	},
+	grid: function() {
+		$('#videoContainer').sortable({
+			stop: function(event, ui) {
+				const video = ui.item.find('video').get(0);
+				video.play();
+			},
+		});
+		$('#videoContainer').disableSelection();
+		$('.resizable-video')
+			.resizable({
+				grid: [80, 60],
+				aspectRatio: 4 / 3,
+				maxWidth: 640,
+				maxHeight: 480,
+			});
+		/*
+		const options = {
+			cellHeight: 80,
+			verticalMargin: 10,
+		};
+		$('.grid-stack').gridstack(options);
+		*/
+	},
+	start: function() {
+		const room = document.querySelector('#roomId').value;
+		const rtc = new SimpleWebRTC({
+			url: '/',
+			localVideoEl: 'local',
+			remoteVideosEl: '',
+			autoRequestMedia: true,
+		});
+		videoChat.connect(rtc, room);
+	},
+	connect: function(webrtc, room) {
+		console.log('start');
+		webrtc.joinRoom(room);
+		webrtc.on('videoAdded', (video, peer) => {
+			videoChat.add(video, peer);
+		});
+	},
+	add: function(video, peer) {
+		console.log('Dingdingding');
+	},
+};
+
+// "CONTROLLER"
+const app = {
+	currentRoom: '',
+	init: function() {
+		this.currentRoom = null;
+		$('#videoChat').hide();
 		chat.init();
+		videoChat.init();
 		roomModals.init();
 		sidebarView.init();
 		fetchUser();
@@ -221,6 +299,10 @@ const app = {
 	setUser: function(user) {
 		console.log(user);
 		this.user = user;
+		sidebarView.render(user.rooms);
+	},
+	addRoom: function(room) {
+		this.user.rooms.push(room);
 		sidebarView.render(user.rooms);
 	},
 	getUser: function() {

@@ -24,6 +24,7 @@ table {
 .send-message-box {
     text-align: right;
     padding-top: 16px;
+    padding-bottom: 8px;
     display: block;
 }
 .send-message-box button {
@@ -38,7 +39,8 @@ table {
     max-height: 87%;
     width: 100%;
     display: block;
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .huge-button {
@@ -64,4 +66,22 @@ table {
     padding: 0;
     color: lightgrey;
     margin: auto;
+}
+
+video {
+    max-height: 100%;
+    max-width: 100%;
+}
+.resizable-video {
+
+}
+.user-online {
+    color: green;
+    font-weight: bold;
+}
+.user-offline {
+    color: grey;
+}
+.sidebar {
+    min-width: 200px;
 }
