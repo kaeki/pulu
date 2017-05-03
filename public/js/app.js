@@ -254,13 +254,6 @@ const videoChat = {
 				maxWidth: 640,
 				maxHeight: 480,
 			});
-		/*
-		const options = {
-			cellHeight: 80,
-			verticalMargin: 10,
-		};
-		$('.grid-stack').gridstack(options);
-		*/
 	},
 	start: function() {
 		const room = document.querySelector('#roomId').value;
@@ -278,9 +271,28 @@ const videoChat = {
 		webrtc.on('videoAdded', (video, peer) => {
 			videoChat.add(video, peer);
 		});
+		webrtc.on('videoRemoved', function(video, peer) {
+			videoChat.remove(video, peer);
+		});
 	},
 	add: function(video, peer) {
-		console.log('Dingdingding');
+		console.log('video added', peer);
+		const container = document.createElement('div');
+		container.setAttribute('class', 'resizable-video');
+		container.setAttribute('id', 'container_' + webrtc.getDomId(peer));
+		container.appendChild(video);
+		// suppress contextmenu
+		video.oncontextmenu = function() {
+			return false;
+		};
+		this.container.appendChild(container);
+	},
+	remove: function(video, peer) {
+		console.log('video removed ', peer);
+		const videoEl = document.getElementById(peer ? 'container_'+webrtc.getDomId(peer) : 'local');
+		if (this.container && videoEl) {
+			this.container.removeChild(videoEl);
+		}
 	},
 };
 
