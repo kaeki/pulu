@@ -52,12 +52,14 @@ server.listen(port, (err) => {
 });
 
 // ####### SIGNAL SERVER ########
+
 const appRtc = express();
 const config = require('getconfig');
 const webrtc = require('signal-master/sockets');
 
-const signalServer = appRtc.listen(8888, (err) => {
+const signalServer = appRtc.listen(3000, (err) => {
     if (err) console.log(err);
-    console.log('SignalServer (for webRTC) is listening port 8888');
+    console.log('SignalServer (for webRTC) is listening port 3000');
 });
 webrtc(signalServer, config);
+

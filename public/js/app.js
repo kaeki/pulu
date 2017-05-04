@@ -263,7 +263,7 @@ const videoChat = {
 		$('#startVideoBtn').hide();
 		$('#hangupBtn').show();
 		$('#videoChat').show();
-		const room = document.querySelector('#roomId').value;
+		const room = document.querySelector('#roomId').innerHTML;
 		this.title.innerHTML = document.querySelector('#roomTitle').innerHTML;
 		videoChat.connect(room);
 	},
@@ -279,11 +279,12 @@ const videoChat = {
 	connect: function(room) {
 		console.log('connect');
 		this.rtc = new SimpleWebRTC({
-			url: 'localhost:5001',
+			url: ':3000',
 			localVideoEl: 'local',
 			remoteVideosEl: '',
 			autoRequestMedia: true,
 		});
+		console.log(room);
 		this.rtc.joinRoom(room);
 		this.rtc.on('videoAdded', (video, peer) => {
 			console.log('new video incoming!');
@@ -297,7 +298,7 @@ const videoChat = {
 		console.log('video added', peer);
 		const container = document.createElement('div');
 		container.setAttribute('class', 'resizable-video');
-		container.setAttribute('id', 'container_' + webrtc.getDomId(peer));
+		container.setAttribute('id', 'container_' + this.rtc.getDomId(peer));
 		container.appendChild(video);
 		// suppress contextmenu
 		video.oncontextmenu = function() {

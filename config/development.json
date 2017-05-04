@@ -1,19 +1,19 @@
-   {
-     "isDev": true,
-     "rooms": {
-       "/* maxClients */": "/* maximum number of clients per room. 0 = no limit */",
-       "maxClients": 0
-     },
-     "stunservers": [
-       {
-         "url": "stun:stun.l.google.com:19302"
-       }
-     ],
-     "turnservers": [
-       {
-         "urls": ["turn:localhost:5001"],
-         "secret": "turnserversharedsecret",
-         "expiry": 86400
-       }
-     ]
-   }
+{
+  "isDev": true,
+  "rooms": {
+    "/* maxClients */": "/* maximum number of clients per room. 0 = no limit */",
+    "maxClients": 0
+  },
+  "stunservers": [
+    {
+      "url": "stun:stun.l.google.com:19302"
+    }
+  ],
+  "turnservers": [
+    {
+      "urls": ["turn:your.turn.servers.here"],
+      "secret": "turnserversharedsecret",
+      "expiry": 86400
+    }
+  ]
+}
