@@ -263,15 +263,9 @@ const videoChat = {
 		$('#startVideoBtn').hide();
 		$('#hangupBtn').show();
 		$('#videoChat').show();
-		this.rtc = new SimpleWebRTC({
-			url: '/:5001',
-			localVideoEl: 'local',
-			remoteVideosEl: '',
-			autoRequestMedia: true,
-		});
 		const room = document.querySelector('#roomId').value;
 		this.title.innerHTML = document.querySelector('#roomTitle').innerHTML;
-		videoChat.connect(this.rtc, room);
+		videoChat.connect(room);
 	},
 	stop: function() {
 		console.log('stop');
@@ -284,8 +278,15 @@ const videoChat = {
 	},
 	connect: function(room) {
 		console.log('connect');
+		this.rtc = new SimpleWebRTC({
+			url: 'localhost:5001',
+			localVideoEl: 'local',
+			remoteVideosEl: '',
+			autoRequestMedia: true,
+		});
 		this.rtc.joinRoom(room);
 		this.rtc.on('videoAdded', (video, peer) => {
+			console.log('new video incoming!');
 			videoChat.add(video, peer);
 		});
 		this.rtc.on('videoRemoved', function(video, peer) {

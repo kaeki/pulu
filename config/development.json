@@ -1,5 +1,5 @@
    {
-     "isDev": false,
+     "isDev": true,
      "rooms": {
        "/* maxClients */": "/* maximum number of clients per room. 0 = no limit */",
        "maxClients": 0
