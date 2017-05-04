@@ -89,7 +89,7 @@ const sidebarView = {
 		console.log(rooms);
 		if (rooms.length == 0) {
 			self.roomsList.innerHTML = `
-				<li>Add/Create rooms and start chatting</li>`;
+				<li class="text-light">Add/Create rooms and start chatting</li>`;
 		} else {
 			for(let i = 0; i < rooms.length; i++) {
 				if (i == 0) {
@@ -264,7 +264,7 @@ const videoChat = {
 		$('#hangupBtn').show();
 		$('#videoChat').show();
 		this.rtc = new SimpleWebRTC({
-			// url: '/',
+			url: '/:5001',
 			localVideoEl: 'local',
 			remoteVideosEl: '',
 			autoRequestMedia: true,

@@ -48,6 +48,16 @@ require('./app/api.js')(app);
 // ########### LAUNCH ###########
 server.listen(port, (err) => {
     if (err) console.log(err);
-    console.log('Server is listening port ', port);
+    console.log('App Server is listening port ', port);
 });
 
+// ####### SIGNAL SERVER ########
+const appRtc = express();
+const config = require('./config/webrtc-conf.json');
+const webrtc = require('signal-master/sockets');
+
+const signalServer = appRtc.listen(5001, (err) => {
+    if (err) console.log(err);
+    console.log('SignalServer (for webRTC) is listening port 5001');
+});
+webrtc(signalServer, config);
