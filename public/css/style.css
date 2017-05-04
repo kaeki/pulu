@@ -8,3 +8,9 @@
     position: fixed;
     width: 100%;
 }
+.dgbg {
+    background: #292b2c;
+}
+.text-light {
+    color: darkgrey;
+}
