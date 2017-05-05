@@ -111,7 +111,7 @@ const sidebarView = {
 		li.setAttribute('class', 'nav-item');
 		const temp = `<a class="nav-link" 
 			data-toggle="tab" 
-			href="#${room.name}" 
+			href="#${room._id}" 
 			role="tab">${room.name}</a>
 		</li>`;
 		li.innerHTML = temp;
@@ -132,10 +132,10 @@ const sidebarView = {
 			self.title.innerHTML = room.name;
 			self.id.innerHTML = room._id;
 			return `<div class="tab-pane active" 
-			id="${room.name}" role="tabpanel"></div>`;
+			id="${room._id}" role="tabpanel"></div>`;
 		} else {
 			return `<div class="tab-pane" 
-			id="${room.name}" role="tabpanel"></div>`;
+			id="${room._id}" role="tabpanel"></div>`;
 		}
 	},
 };
@@ -225,104 +225,13 @@ const chat = {
 	},
 };
 
-// VIDEO CHAT
-const videoChat = {
-	init: function() {
-		this.local = document.querySelector('#local');
-		this.container = document.querySelector('#videoContainer');
-		this.title = document.querySelector('#videoChatTitle');
-		document.querySelector('#startVideoBtn').addEventListener(
-			'click', (evt) => {
-				videoChat.start();
-		});
-		document.querySelector('#hangupBtn').addEventListener(
-			'click', () => {
-				videoChat.stop();
-			}
-		);
-		videoChat.grid();
-	},
-	grid: function() {
-		$('#videoContainer').sortable({
-			stop: function(event, ui) {
-				const video = ui.item.find('video').get(0);
-				video.play();
-			},
-		});
-		$('#videoContainer').disableSelection();
-		$('.resizable-video')
-			.resizable({
-				grid: [40, 30],
-				aspectRatio: 4 / 3,
-				maxWidth: 640,
-				maxHeight: 480,
-			});
-	},
-	start: function() {
-		console.log('start');
-		$('#startVideoBtn').hide();
-		$('#hangupBtn').show();
-		$('#videoChat').show();
-		const room = document.querySelector('#roomId').innerHTML;
-		this.title.innerHTML = document.querySelector('#roomTitle').innerHTML;
-		videoChat.connect(room);
-	},
-	stop: function() {
-		console.log('stop');
-		$('#startVideoBtn').show();
-		$('#hangupBtn').hide();
-		$('#videoChat').hide();
-		this.rtc.stopLocalVideo();
-		this.rtc.leaveRoom();
-		this.rtc.connection.disconnect();
-	},
-	connect: function(room) {
-		console.log('connect');
-		this.rtc = new SimpleWebRTC({
-			url: ':3000',
-			localVideoEl: 'local',
-			remoteVideosEl: '',
-			autoRequestMedia: true,
-		});
-		console.log(room);
-		this.rtc.joinRoom(room);
-		this.rtc.on('videoAdded', (video, peer) => {
-			console.log('new video incoming!');
-			videoChat.add(video, peer);
-		});
-		this.rtc.on('videoRemoved', function(video, peer) {
-			videoChat.remove(video, peer);
-		});
-	},
-	add: function(video, peer) {
-		console.log('video added', peer);
-		const container = document.createElement('div');
-		container.setAttribute('class', 'resizable-video');
-		container.setAttribute('id', 'container_' + this.rtc.getDomId(peer));
-		container.appendChild(video);
-		// suppress contextmenu
-		video.oncontextmenu = function() {
-			return false;
-		};
-		this.container.appendChild(container);
-	},
-	remove: function(video, peer) {
-		console.log('video removed ', peer);
-		const videoEl = document.getElementById(
-			peer ? 'container_'+webrtc.getDomId(peer) : 'local'
-		);
-		if (this.container && videoEl) {
-			this.container.removeChild(videoEl);
-		}
-	},
-};
 
 // "CONTROLLER"
 const app = {
 	currentRoom: '',
 	init: function() {
 		$('#videoChat').hide();
-		$('#hangupBtn').hide();
+		$('#videoChatControls').hide();
 		chat.init();
 		videoChat.init();
 		roomModals.init();
