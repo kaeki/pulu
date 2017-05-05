@@ -111,7 +111,7 @@ const sidebarView = {
 		li.setAttribute('class', 'nav-item');
 		const temp = `<a class="nav-link" 
 			data-toggle="tab" 
-			href="#${room._id}" 
+			href="#${room.name}" 
 			role="tab">${room.name}</a>
 		</li>`;
 		li.innerHTML = temp;
@@ -132,10 +132,10 @@ const sidebarView = {
 			self.title.innerHTML = room.name;
 			self.id.innerHTML = room._id;
 			return `<div class="tab-pane active" 
-			id="${room._id}" role="tabpanel"></div>`;
+			id="${room.name}" role="tabpanel"></div>`;
 		} else {
 			return `<div class="tab-pane" 
-			id="${room._id}" role="tabpanel"></div>`;
+			id="${room.name}" role="tabpanel"></div>`;
 		}
 	},
 };
