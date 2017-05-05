@@ -73,7 +73,8 @@ const videoChat = {
 			autoRequestMedia: true,
 		});
 		$('#localVideoTitle').text(app.getUser().name);
-		this.rtc.joinRoom(room);
+		this.rtc.mute();
+        this.rtc.joinRoom(room);
 		this.rtcInit();
 	},
 	rtcInit: function() {
@@ -93,7 +94,7 @@ const videoChat = {
             showVolume(document.getElementById('localVolume'), volume);
         });
         this.rtc.on('remoteVolumeChange', function(peer, volume) {
-            showVolume(document.getElementById('volume_' + peer.id), volume);
+            showVolume(document.getElementById('volume_' + this.rtc.getDomId(peer)), volume);
         });
 	},
 	add: function(video, peer) {
@@ -120,14 +121,31 @@ const videoChat = {
 		elem.appendChild(label);
 	},
     addVolumeMeter: function(elem, peer) {
+        const mute = document.createElement('i');
+        mute.className = 'material-icons remotemute';
+        mute.innerText = 'volume_off';
+        mute.addEventListener('click', () => {
+            $(this).toggleClass('mutemute');
+            return videoChat.muteRemote(peer);
+        });
         const vol = document.createElement('meter');
-        vol.id = 'volume_' + peer.id;
+        vol.id = 'volume_' + this.rtc.getDomId(peer);
         vol.className = 'volume';
         vol.min = -45;
         vol.max = -20;
         vol.low = -40;
         vol.high = -25;
         elem.appendChild(vol);
+        elem.appendChild(mute);
+    },
+    muteRemote: function(peer) {
+        const video = document.getElementById(this.rtc.getDomId(peer));
+        console.log(video);
+        if (video.volume > 0) {
+            video.volume = 0;
+        } else {
+            video.volume = 0.8;
+        }
     },
     showVolume: function(el, volume) {
         console.log('showVolume', volume, el);
