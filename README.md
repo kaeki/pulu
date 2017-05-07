@@ -11,7 +11,8 @@ Chat application with video chat made using Node.js, WebRTC
 Run  
 `npm install`
 
-For database connection create file named config.js to config folder
+Pulu uses MongoDB for users and rooms and database connection create a 
+file named config.js to config folder
 ```javascript
 //  config.js
 module.exports = {
