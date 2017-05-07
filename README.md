@@ -1,4 +1,4 @@
-# sssf-project
+# Pulu
 
 Chat application with video chat made using Node.js, WebRTC
 
