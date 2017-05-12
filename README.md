@@ -1,10 +1,7 @@
 # Pulu
 
-Chat application with video chat made using Node.js, WebRTC
+Chat application with video chat made using Node.js, Socket.io and WebRTC.
 
-## Example
-
-[Example page](http://attesal-project.jelastic.metropolia.fi/)
 
 ## Install
 
