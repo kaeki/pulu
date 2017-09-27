@@ -1,10 +1,7 @@
 # Pulu
-
+![Logo](https://github.com/kaeki/pulu/blob/master/public/img/logo-big.png?raw=true "logo")
 Chat application with video chat made using Node.js, Socket.io and WebRTC.
 
-## Requirements 
-* MongoDB 3.** ->
-* Node.js 7.0 ->
 ## Install
 
 Run  
