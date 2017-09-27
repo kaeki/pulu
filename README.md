@@ -1,4 +1,5 @@
-<img src="https://github.com/kaeki/pulu/blob/master/public/img/logo-big.png?raw=true" width="100" alt="logo">
+
+<p align="center"><img src="https://github.com/kaeki/pulu/blob/master/public/img/logo-big.png?raw=true" width="150" alt="logo" /></p>
 
 # Pulu
 
