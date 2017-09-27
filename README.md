@@ -1,4 +1,5 @@
-# ![Logo](https://github.com/kaeki/pulu/blob/master/public/img/logo-big.png?raw=true | width=100 "logo") Pulu
+<img src="https://github.com/kaeki/pulu/blob/master/public/img/logo-big.png?raw=true" width="100" alt="logo">
+# Pulu
 
 Chat application with video chat made using Node.js, Socket.io and WebRTC.
 
